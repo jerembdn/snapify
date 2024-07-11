@@ -1,11 +1,13 @@
 "use client";
 
 import { css, cx } from "@styled-system/css";
-import type React from "react";
+import React from "react";
 import ProductSettingsForm from "./settings-form";
 import ProductPrevisualization from "./previsualization";
 import { useForm } from "react-hook-form";
 import { WIDGETS } from "@/constants/widgets";
+import axios from "axios";
+import type { Video } from "@/types/video";
 
 export type Widget = {
 	label: string;
@@ -42,6 +44,9 @@ const defaultWidgets: Widget[] = [
 ];
 
 const Product: React.FC = () => {
+	const [loading, setLoading] = React.useState<boolean>(false);
+	const [video, setVideo] = React.useState<Video>();
+
 	const { register, setValue, watch } = useForm<FormData>({
 		defaultValues: {
 			widgets: defaultWidgets,
@@ -49,10 +54,31 @@ const Product: React.FC = () => {
 	});
 
 	const watchWidgets = watch("widgets");
+	const watchUrl = watch("url");
 
-	const onUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		// make request to get video data
+	const onUrlChange = (url: string) => {
+		setLoading(true);
+
+		axios
+			.get(`/api/thumbnail/youtube?q=${url}`)
+			.then((response) => {
+				const video = response.data;
+				setVideo(video);
+			})
+			.finally(() => setLoading(false));
 	};
+
+	// - When watchUrl change, wait 1s and call onUrlChange if hasn't changed
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	React.useEffect(() => {
+		const timeout = setTimeout(() => {
+			if (watchUrl) {
+				onUrlChange(watchUrl);
+			}
+		}, 1000);
+
+		return () => clearTimeout(timeout);
+	}, [watchUrl]);
 
 	return (
 		<div
@@ -80,6 +106,7 @@ const Product: React.FC = () => {
 				className={css({
 					flex: 0.7,
 				})}
+				video={video}
 				activeWidgets={watchWidgets}
 			/>
 		</div>

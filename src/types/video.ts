@@ -5,7 +5,7 @@ export type Video = {
   thumbnailUrl: string;
   channelName: string;
   channelLogoUrl: string;
-  duration: number;
+  duration: string;
   viewsCount: number;
   publishedAt: Date;
 };

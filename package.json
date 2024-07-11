@@ -11,6 +11,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@googleapis/youtube": "^16.1.0",
     "@qotum/panda-preset": "^1.0.0",
     "@t3-oss/env-nextjs": "^0.9.2",
     "@tonightpass/requester": "^2.0.12",

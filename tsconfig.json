@@ -19,6 +19,7 @@
       "dom",
       "ES2015"
     ],
+    "baseUrl": ".",
     "module": "ESNext",
     "target": "es6",
     "paths": {

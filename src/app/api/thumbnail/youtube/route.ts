@@ -1,5 +1,8 @@
+import { YoutubeClient } from "@/services/youtube-client";
 import type { Video } from "@/types/video";
 import type { NextRequest } from "next/server";
+
+const youtubeClient = new YoutubeClient();
 
 export const GET = async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
@@ -27,7 +30,15 @@ export const GET = async (request: NextRequest) => {
     return new Response("Invalid youtube url", { status: 400 });
   }
 
-  const apiKey = process.env.YOUTUBE_API_KEY;
+  const video = await youtubeClient.getVideoThumbnail(videoId);
+
+  return new Response(JSON.stringify(video), {
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  /* const apiKey = process.env.YOUTUBE_API_KEY;
   const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`);
 
   if(!response.ok) {
@@ -45,7 +56,7 @@ export const GET = async (request: NextRequest) => {
     type: "youtube",
     id: videoId,
     title: videoData.snippet.title,
-    thumbnailUrl: videoData.snippet.thumbnails.default.url,
+    thumbnailUrl: videoData.snippet.thumbnails.maxres.url,
     channelName: videoData.snippet.channelTitle,
     channelLogoUrl: "",
     duration: 0,
@@ -57,5 +68,5 @@ export const GET = async (request: NextRequest) => {
     headers: {
       "content-type": "application/json",
     },
-  });
+  }); */
 };

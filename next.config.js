@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 
-import("./env.mjs");
-
 const { hostname } = require('node:os');
 const path = require("node:path");
+
+import("./env.mjs");
 
 const securityHeaders = [
   {

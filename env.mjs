@@ -12,4 +12,6 @@ export const env = createEnv({
     YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY || "",
     NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "",
   },
+  skipValidation: !!process.env.CI,
+  emptyStringAsUndefined: true,
 });

@@ -7,9 +7,11 @@ import type { Widget } from "..";
 import Select from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import React from "react";
+import type { Video } from "@/types/video";
 
 type ProductPrevisualizationProps = {
 	className?: string;
+	video?: Video;
 	activeWidgets: Widget[];
 };
 
@@ -20,6 +22,7 @@ type FormData = {
 
 const ProductPrevisualization: React.FC<ProductPrevisualizationProps> = ({
 	className,
+	video = defaultVideo,
 	activeWidgets,
 }: ProductPrevisualizationProps) => {
 	const ref = React.useRef<HTMLDivElement>(null);
@@ -102,7 +105,7 @@ const ProductPrevisualization: React.FC<ProductPrevisualizationProps> = ({
 			>
 				<PrevisualizationCard
 					ref={ref}
-					video={defaultVideo}
+					video={video}
 					options={{
 						...defaultOptions,
 						activeWidgets,
