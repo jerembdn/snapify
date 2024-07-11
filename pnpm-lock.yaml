@@ -29,6 +29,9 @@ importers:
       framer-motion:
         specifier: 10.6.1
         version: 10.6.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      html-to-image:
+        specifier: ^1.11.11
+        version: 1.11.11
       micro:
         specifier: ^10.0.1
         version: 10.0.1
@@ -1913,6 +1916,9 @@ packages:
 
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
+
+  html-to-image@1.11.11:
+    resolution: {integrity: sha512-9gux8QhvjRO/erSnDPv28noDZcPZmYE7e1vFsBLKLlRlKDSqNJYebj6Qz1TGd5lsRV+X+xYyjCKjuZdABinWjA==}
 
   http-errors@1.7.3:
     resolution: {integrity: sha512-ZTTX0MWrsQ2ZAhA1cejAwDLycFsd7I7nVtnkT3Ol0aqodaKW+0CTZDQ1uBv5whptCnc8e8HeRRJxRs0kmm/Qfw==}
@@ -4919,6 +4925,8 @@ snapshots:
       function-bind: 1.1.2
 
   hookable@5.5.3: {}
+
+  html-to-image@1.11.11: {}
 
   http-errors@1.7.3:
     dependencies:
