@@ -12,7 +12,7 @@ const youtubeVideoSchema = z.object({
   channelLogoUrl: z.string(),
   duration: z.string(),
   viewsCount: z.number(),
-  publishedAt: z.string(),
+  publishedAt: z.date(),
 });
 
 export class YoutubeClient {
@@ -26,12 +26,14 @@ export class YoutubeClient {
   }
 
   async getVideoThumbnail(id: string): Promise<Video> {
-    const response = await this.client.videos.list({
+    const thumbnailResponse = await this.client.videos.list({
       part: ["snippet", "contentDetails", "statistics"],
       id: [id],
     });
 
-    const video = response.data.items?.[0];
+    const video = thumbnailResponse.data.items?.[0];
+
+    console.log(video);
 
     if (!video || !video.snippet || !video.contentDetails || !video.statistics) {
       throw new Error("Failed to fetch video data");
@@ -49,10 +51,23 @@ export class YoutubeClient {
       channelLogoUrl: "",
       duration: video.contentDetails?.duration,
       viewsCount,
-      publishedAt: video.snippet?.publishedAt,
+      publishedAt: new Date(video.snippet?.publishedAt || ""),
     });
 
     const duration = youtubeVideo.duration.replace("PT", "").replace("H", ":").replace("M", ":").replace("S", "");
+
+    // @ts-ignore
+    const channelResponse = await this.client.channels.list({
+      part: ["snippet"],
+      id: [video.snippet.channelId],
+    });
+
+    // @ts-ignore
+    const channel = channelResponse.data.items?.[0];
+
+    if (channel) {
+      youtubeVideo.channelLogoUrl = channel.snippet?.thumbnails?.default?.url || "";
+    }
 
     return {
       ...youtubeVideo,

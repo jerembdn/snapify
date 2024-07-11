@@ -50,7 +50,7 @@ const PrevisualizationCard = React.forwardRef<
         damping: 10,
         duration: 0.1,
       }}
-      id="image-to-download"
+      id="youtube-thumbnail"
       key={"container"}
       className={cx(
         roboto.className,
@@ -103,7 +103,7 @@ const PrevisualizationCard = React.forwardRef<
               fontWeight: "medium",
             })}
           >
-            ??:??
+            {video.duration || "??:??"}
           </div>
         )}
 
@@ -141,7 +141,7 @@ const PrevisualizationCard = React.forwardRef<
               height: "38px",
               borderRadius: "50%",
             })}
-            src={video.channelLogoUrl}
+            src={video.channelLogoUrl || "https://yt3.ggpht.com/ytc/AIdro_nixweCf48-XvZzG4wPT8dXw9mJNcHes4fKKoRaa5ZOs0M=s48-c-k-c0x00ffffff-no-rj"}
             alt={`Logo de chaîne YouTube de ${video.channelName}`}
             width={38}
             height={38}

@@ -8,7 +8,7 @@ export const defaultVideo: Video = {
   thumbnailUrl: "https://i.ytimg.com/vi/p9sfxpgRATM/maxresdefault.jpg",
   channelName: "SQUEEZIE",
   channelLogoUrl: "https://yt3.ggpht.com/ytc/AIdro_nixweCf48-XvZzG4wPT8dXw9mJNcHes4fKKoRaa5ZOs0M=s48-c-k-c0x00ffffff-no-rj",
-  duration: 0,
+  duration: "10:02",
   viewsCount: 9015481,
   publishedAt: new Date(),
 };

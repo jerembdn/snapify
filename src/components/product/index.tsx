@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { WIDGETS } from "@/constants/widgets";
 import axios from "axios";
 import type { Video } from "@/types/video";
+import { defaultVideo } from "@/constants/default-video";
 
 export type Widget = {
 	label: string;
@@ -45,7 +46,7 @@ const defaultWidgets: Widget[] = [
 
 const Product: React.FC = () => {
 	const [loading, setLoading] = React.useState<boolean>(false);
-	const [video, setVideo] = React.useState<Video>();
+	const [video, setVideo] = React.useState<Video>(defaultVideo);
 
 	const { register, setValue, watch } = useForm<FormData>({
 		defaultValues: {
@@ -80,6 +81,8 @@ const Product: React.FC = () => {
 		return () => clearTimeout(timeout);
 	}, [watchUrl]);
 
+	console.log(video);
+
 	return (
 		<div
 			className={css({
@@ -90,6 +93,9 @@ const Product: React.FC = () => {
 			})}
 		>
 			<ProductSettingsForm
+				className={css({
+					flex: 0.4,
+				})}
 				isValidVideo={true}
 				register={register}
 				setValue={setValue}
@@ -97,9 +103,7 @@ const Product: React.FC = () => {
 					defaultWidgets,
 					defaultDisplay: "block",
 				}}
-				className={css({
-					flex: 0.4,
-				})}
+				loading={loading}
 			/>
 
 			<ProductPrevisualization
@@ -107,6 +111,7 @@ const Product: React.FC = () => {
 					flex: 0.7,
 				})}
 				video={video}
+				loading={loading}
 				activeWidgets={watchWidgets}
 			/>
 		</div>

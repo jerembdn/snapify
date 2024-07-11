@@ -12,13 +12,16 @@ import { convertHtmlToImage } from "@/plugins/html-to-image";
 import PrevisualizationCard from "./card";
 import type { Widget } from "..";
 import { useForm } from "react-hook-form";
+import Spinner from "@/components/ui/spinner";
+import { slugify } from "@/utils/slugify";
 
-const ELEMENT_ID = "image-to-download";
+const ELEMENT_ID = "youtube-thumbnail";
 
 type ProductPrevisualizationProps = {
-	className?: string;
-	video?: Video;
-	activeWidgets: Widget[];
+  className?: string;
+  video?: Video;
+  loading?: boolean;
+  activeWidgets: Widget[];
 };
 
 type FormData = {
@@ -27,9 +30,10 @@ type FormData = {
 };
 
 const ProductPrevisualization: React.FC<ProductPrevisualizationProps> = ({
-	className,
-	video = defaultVideo,
-	activeWidgets,
+  className,
+  video = defaultVideo,
+  loading = false,
+  activeWidgets,
 }: ProductPrevisualizationProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -44,7 +48,7 @@ const ProductPrevisualization: React.FC<ProductPrevisualizationProps> = ({
     const imageBase64 = await convertHtmlToImage(ELEMENT_ID, format);
 
     const link = document.createElement("a");
-    link.download = `my-image-name.${format}`;
+    link.download = `${slugify(video.title)}.${format}`;
     link.href = imageBase64;
     link.click();
   });
@@ -66,131 +70,138 @@ const ProductPrevisualization: React.FC<ProductPrevisualizationProps> = ({
       className={cx(
         css({
           position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          borderRadius: "8px",
-          overflow: "hidden",
-          minHeight: "560px",
         }),
-        "background-png-like",
         className
       )}
     >
-      <div
-        className={css({
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "15px 20px 0 20px",
-          alignItems: "center",
-          zIndex: 1,
-        })}
-      >
-        <h3
+      {loading && (
+        <div
           className={css({
-            fontSize: "22px",
-            fontWeight: "semibold",
+            zIndex: 2,
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            borderRadius: "8px",
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           })}
         >
-          Prévisualisation
-        </h3>
-
-			<div
-				className={css({
-					position: "absolute",
-					width: "100%",
-					height: "100%",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-				})}
-			>
-				<PrevisualizationCard
-					ref={ref}
-					video={video}
-					options={{
-						...defaultOptions,
-						activeWidgets,
-					}}
-				/>
-			</div>
+          <Spinner />
+        </div>
+      )}
 
       <div
-        className={css({
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        })}
+        className={cx(
+          css({
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "8px",
+            overflow: "hidden",
+            minHeight: "560px",
+          }),
+          "background-png-like"
+        )}
       >
-        <PrevisualizationCard
-          ref={ref}
-          video={defaultVideo}
-          options={{
-            ...defaultOptions,
-            activeWidgets,
-          }}
-        />
+        <div
+          className={css({
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "15px 20px 0 20px",
+            alignItems: "center",
+            zIndex: 1,
+          })}
+        >
+          <h3
+            className={css({
+              fontSize: "22px",
+              fontWeight: "semibold",
+            })}
+          >
+            Prévisualisation
+          </h3>
+        </div>
+
+        <div
+          className={css({
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          })}
+        >
+          <PrevisualizationCard
+            ref={ref}
+            video={video}
+            options={{
+              ...defaultOptions,
+              activeWidgets,
+            }}
+          />
+        </div>
+
+        <form
+          className={css({
+            position: "absolute",
+            width: "100%",
+            left: 0,
+            bottom: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "10px",
+            bg: "rgba(15, 15, 15, 0.15)",
+            borderBottomRadius: "8px",
+            py: "20px",
+            zIndex: 1,
+          })}
+        >
+          <Select
+            {...register("size")}
+            className={css({
+              width: "max-content",
+            })}
+          >
+            <option value={"0.5"}>0.5x</option>
+            <option value={"0.75"}>0.75x</option>
+            <option value={"1"}>1x</option>
+            <option value={"1.5"}>1.5x</option>
+            <option value={"2"}>2x</option>
+            <option value={"3"}>3x</option>
+          </Select>
+
+          <Select
+            {...register("format")}
+            className={css({
+              width: "max-content",
+            })}
+          >
+            <option value={"png"}>PNG</option>
+            <option value={"jpg"}>JPG</option>
+            <option value={"webp"}>WEBP</option>
+          </Select>
+
+          <Button
+            prefix={<Icon icon="download" size={16} />}
+            color="secondary"
+            onClick={handleDownload}
+          >
+            Télécharger
+          </Button>
+
+          <Button
+            prefix={<Icon icon="copy" size={16} />}
+            withoutBorder
+            onClick={handleCopy}
+          >
+            Copier
+          </Button>
+        </form>
       </div>
-
-      <form
-        className={css({
-          position: "absolute",
-          width: "100%",
-          left: 0,
-          bottom: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "10px",
-          bg: "rgba(15, 15, 15, 0.15)",
-          borderBottomRadius: "8px",
-          py: "20px",
-          zIndex: 1,
-        })}
-      >
-        <Select
-          {...register("size")}
-          className={css({
-            width: "max-content",
-          })}
-        >
-          <option value={"0.5"}>0.5x</option>
-          <option value={"0.75"}>0.75x</option>
-          <option value={"1"}>1x</option>
-          <option value={"1.5"}>1.5x</option>
-          <option value={"2"}>2x</option>
-          <option value={"3"}>3x</option>
-        </Select>
-
-        <Select
-          {...register("format")}
-          className={css({
-            width: "max-content",
-          })}
-        >
-          <option value={"png"}>PNG</option>
-          <option value={"jpg"}>JPG</option>
-          <option value={"webp"}>WEBP</option>
-        </Select>
-
-        <Button
-          prefix={<Icon icon="download" size={16} />}
-          color="secondary"
-          onClick={handleDownload}
-        >
-          Télécharger
-        </Button>
-
-        <Button
-          prefix={<Icon icon="copy" size={16} />}
-          withoutBorder
-          onClick={handleCopy}
-        >
-          Copier
-        </Button>
-      </form>
     </div>
   );
 };
